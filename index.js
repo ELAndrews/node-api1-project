@@ -13,21 +13,25 @@ app.use(cors());
 
 app.post("/api/users", (req, res) => {
   const newUser = req.body;
-  insert(newUser)
-    .then(user => {
-      if (user) {
-        res.status(201).json(user);
-      } else {
-        res
-          .status(400)
-          .json({ errorMessage: "Please provide name and bio for the user." });
-      }
-    })
-    .catch(error => {
-      res.status(500).json({
-        errorMessage: "There was an error while saving the user to the database"
+  if (!newUser.name || !newUser.bio) {
+    res
+      .status(400)
+      .json({ errorMessage: "Please provide name and bio for the user." });
+  } else {
+    insert(newUser)
+      .then(user => {
+        if (user) {
+          res.status(201).json(user);
+        } else {
+        }
+      })
+      .catch(error => {
+        res.status(500).json({
+          errorMessage:
+            "There was an error while saving the user to the database"
+        });
       });
-    });
+  }
 });
 
 app.get("/api/users", (req, res) => {
